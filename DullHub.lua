@@ -299,4 +299,191 @@ end
 function showCredits()
     clearFrame()
     local creditsLabel = Instance.new("TextLabel")
-    creditsLabel.Size = UDim2.new(1, -40, 
+    creditsLabel.Size = UDim2.new(1, -40, 0, 300)
+    creditsLabel.Position = UDim2.new(0, 20, 0, 70)
+    creditsLabel.BackgroundTransparency = 1
+    creditsLabel.TextColor3 = Color3.fromRGB(180, 180, 255)
+    creditsLabel.Font = Enum.Font.Gotham
+    creditsLabel.TextSize = 18
+    creditsLabel.TextWrapped = true
+    creditsLabel.Text = [[
+Dull Hub
+
+Developer: minihodari12
+GitHub: https://github.com/Minihodari12
+Thank you for using Dull Hub!
+    ]]
+    creditsLabel.Parent = frame
+
+    createButton("< Back", 380, showMainMenu)
+end
+
+-- Cheat-valikko
+function showCheatMenu()
+    clearFrame()
+
+    -- Fly nappi
+    local flyBtn = createButton("Toggle Fly (F)", 70, function()
+        flying = not flying
+        if flying then
+            enableFly()
+            flyBtn.Text = "Disable Fly (F)"
+        else
+            disableFly()
+            flyBtn.Text = "Enable Fly (F)"
+        end
+    end)
+    flyBtn.Text = flying and "Disable Fly (F)" or "Enable Fly (F)"
+
+    -- Speed Boost nappi
+    local speedBoostActive = false
+    local speedBoostBtn = createButton("Speed Boost", 120, function()
+        local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            if not speedBoostActive then
+                humanoid.WalkSpeed = 50
+                speedBoostActive = true
+                speedBoostBtn.Text = "Speed Boost: ON"
+            else
+                humanoid.WalkSpeed = 16
+                speedBoostActive = false
+                speedBoostBtn.Text = "Speed Boost: OFF"
+            end
+        end
+    end)
+
+    -- Set Speed nappi
+    local setSpeedBtn = createButton("Set Speed", 170, function()
+        -- Popup for speed input
+        clearFrame()
+
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, -40, 0, 40)
+        label.Position = UDim2.new(0, 20, 0, 100)
+        label.BackgroundTransparency = 1
+        label.Text = "Enter Speed (default 16):"
+        label.Font = Enum.Font.Gotham
+        label.TextSize = 18
+        label.TextColor3 = Color3.fromRGB(255,255,255)
+        label.Parent = frame
+
+        local inputBox = Instance.new("TextBox")
+        inputBox.Size = UDim2.new(0, 200, 0, 30)
+        inputBox.Position = UDim2.new(0, 70, 0, 150)
+        inputBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
+        inputBox.TextColor3 = Color3.fromRGB(255,255,255)
+        inputBox.Font = Enum.Font.Gotham
+        inputBox.TextSize = 18
+        inputBox.ClearTextOnFocus = true
+        inputBox.PlaceholderText = "16"
+        inputBox.Parent = frame
+
+        local confirmBtn = createButton("Confirm", 200, function()
+            local val = tonumber(inputBox.Text)
+            local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if val and humanoid then
+                humanoid.WalkSpeed = math.clamp(val, 0, 250)
+            end
+            showCheatMenu()
+        end)
+
+        local backBtn = createButton("Cancel", 250, showCheatMenu)
+    end)
+
+    -- Anti Die nappi
+    local antiDieBtn = createButton("Toggle Anti Die", 220, function()
+        antiDieEnabled = not antiDieEnabled
+        if antiDieEnabled then
+            enableAntiDie()
+            antiDieBtn.Text = "Anti Die: ON"
+        else
+            antiDieBtn.Text = "Anti Die: OFF"
+        end
+    end)
+    antiDieBtn.Text = antiDieEnabled and "Anti Die: ON" or "Anti Die: OFF"
+
+    -- Noclip nappi
+    local noclipActive = false
+    local noclipBtn = createButton("Toggle Noclip", 270, function()
+        noclipActive = not noclipActive
+        setNoclip(noclipActive)
+        noclipBtn.Text = noclipActive and "Noclip: ON" or "Noclip: OFF"
+    end)
+    noclipBtn.Text = noclipActive and "Noclip: ON" or "Noclip: OFF"
+
+    -- Infinite Jump nappi
+    local infiniteJumpActive = false
+    local infiniteJumpBtn = createButton("Toggle Infinite Jump", 320, function()
+        infiniteJumpActive = not infiniteJumpActive
+        if infiniteJumpActive then
+            enableInfiniteJump()
+            infiniteJumpBtn.Text = "Infinite Jump: ON"
+        else
+            disableInfiniteJump()
+            infiniteJumpBtn.Text = "Infinite Jump: OFF"
+        end
+    end)
+    infiniteJumpBtn.Text = infiniteJumpActive and "Infinite Jump: ON" or "Infinite Jump: OFF"
+
+    -- Teleport to mouse nappi
+    createButton("Teleport To Mouse", 370, teleportToMouse)
+
+    -- Back nappi
+    createButton("< Back", 410, showMainMenu)
+end
+
+-- Avaimen syöttöikkuna
+local function showKeyInput()
+    clearFrame()
+    frame.Size = UDim2.new(0, 340, 0, 150)
+    frame.Position = UDim2.new(0.5, -170, 0.5, -75)
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -40, 0, 40)
+    label.Position = UDim2.new(0, 20, 0, 20)
+    label.BackgroundTransparency = 1
+    label.Text = "Enter Key:"
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 22
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Parent = frame
+
+    local keyInput = Instance.new("TextBox")
+    keyInput.Size = UDim2.new(0, 300, 0, 35)
+    keyInput.Position = UDim2.new(0, 20, 0, 70)
+    keyInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    keyInput.ClearTextOnFocus = true
+    keyInput.PlaceholderText = "Type your key here"
+    keyInput.Font = Enum.Font.Gotham
+    keyInput.TextSize = 20
+    keyInput.Parent = frame
+
+    local submitBtn = createButton("Submit", 110, function()
+        if keyInput.Text == "MinihodariDeveloper" then
+            frame.Size = UDim2.new(0, 340, 0, 460)
+            frame.Position = UDim2.new(0.5, -170, 0.5, -230)
+            showMainMenu()
+        else
+            keyInput.Text = ""
+            keyInput.PlaceholderText = "Wrong key! Ask correct key from the owner!"
+        end
+    end)
+    submitBtn.Parent = frame
+end
+
+-- Näppäinkomento lentämisen togglelle (F)
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.F then
+        flying = not flying
+        if flying then
+            enableFly()
+        else
+            disableFly()
+        end
+    end
+end)
+
+-- Käynnistetään avaimen kyselyllä
+showKeyInput()
